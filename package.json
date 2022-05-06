@@ -13,10 +13,12 @@
     "@emotion/styled": "11.8.1",
     "core-js": "^3.6.5",
     "express": "4.17.2",
+    "mongodb": "^4.5.0",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "regenerator-runtime": "0.13.7",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "winston": "^3.7.2"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "11.7.2",
