@@ -1,3 +1,3 @@
 import { InserUserDTO } from '../repositories/user-repository';
 
-export type RegisterUserDTO = InserUserDTO;
+export type RegisterUserDTO = Pick<InserUserDTO, 'email' | 'password'>;
