@@ -6,4 +6,6 @@ const router = Router();
 
 router.post('/register', authController.register);
 
+router.post('/activate', authController.activateEmail);
+
 export default router;
