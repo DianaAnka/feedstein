@@ -1,4 +1,5 @@
 import {
+  ActivateEmailDTO,
   InserUserDTO,
   IUserSchema,
   RegisterUserDTO,
@@ -8,6 +9,7 @@ import UserRepository from '../repositories/user-repository';
 import * as moment from 'moment';
 import Events, { EventType } from '../events/pub-sub';
 import { RegisterUserEvent } from '../events/auth-events';
+import { ACTIVATION_EMAIL_TTL } from '../constants';
 
 export class UserService {
   async isEmailAlreadyUsed(email: string): Promise<boolean> {
@@ -18,7 +20,9 @@ export class UserService {
   async registerUser(data: RegisterUserDTO): Promise<IUserSchema> {
     const activationToken = getRandomString();
 
-    const activationTokenExpirseAt = moment().add(1, 'day').toDate();
+    const activationTokenExpirseAt = moment()
+      .add(ACTIVATION_EMAIL_TTL)
+      .toDate();
 
     const userDTO: InserUserDTO = {
       email: data.email,
@@ -35,6 +39,10 @@ export class UserService {
     delete user.activationToken;
     delete user.activationTokenExpirseAt;
     return user;
+  }
+
+  activateEmail(data: ActivateEmailDTO): Promise<boolean> {
+    return UserRepository.activateUserByToken(data.token);
   }
 }
 
