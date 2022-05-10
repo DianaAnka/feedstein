@@ -1,1 +1,1 @@
-export { registerUserSchema } from './auth-validation';
+export * from './auth-validation';
