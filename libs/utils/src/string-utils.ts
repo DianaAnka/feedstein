@@ -10,3 +10,7 @@ export async function hashString(rawString: string): Promise<string> {
 export function getRandomString() {
   return uuid.v4();
 }
+
+export function compareHashingStrings(string1: string, string2: string) {
+  return bcrybt.compare(string1, string2);
+}
