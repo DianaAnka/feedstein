@@ -15,4 +15,4 @@ export const SMTP_PORT = Number.parseInt(process.env.SMTP_PORT, 10) || 587;
 
 export const SMTP_FROM = process.env.SMTP_FROM;
 
-export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+export const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:4200';
