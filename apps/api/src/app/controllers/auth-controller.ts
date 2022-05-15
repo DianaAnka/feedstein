@@ -1,7 +1,13 @@
-import { ActivateEmailDTO, RegisterUserDTO } from '@feedstein/api-interfaces';
+import {
+  ActivateEmailDTO,
+  LoginUserDTO,
+  RegisterUserDTO,
+} from '@feedstein/api-interfaces';
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/user-service';
 import { activateEmailSchema, registerUserSchema } from '@feedstein/validation';
+import { createAccessToken, createRefreshToken } from '@feedstein/utils';
+import { JWT_TOKEN_EXPIRY, SECRET_KEY } from '../config';
 
 export async function register(
   req: Request,
@@ -72,6 +78,42 @@ export async function activateEmail(
       response: {
         message: 'User has been activated',
       },
+    });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function login(req: Request, res: Response, next: NextFunction) {
+  const loginUserDTO: LoginUserDTO = {
+    email: req.body.email,
+    password: req.body.password,
+  };
+  try {
+    const user = await UserService.getUser(loginUserDTO);
+    if (!user)
+      return res.status(400).json({
+        error: {
+          message: 'Wrong email or password',
+        },
+      });
+    if (!UserService.isAccounActivated(user))
+      return res.status(403).json({
+        error: {
+          message: 'User need to be activated',
+        },
+      });
+    return res.status(403).json({
+      response: {
+        user,
+        token: createAccessToken(
+          loginUserDTO.email,
+          SECRET_KEY,
+          JWT_TOKEN_EXPIRY
+        ),
+        jwtTokenExpiry: JWT_TOKEN_EXPIRY,
+      },
+      cookie: createRefreshToken(loginUserDTO.email, SECRET_KEY),
     });
   } catch (e) {
     next(e);

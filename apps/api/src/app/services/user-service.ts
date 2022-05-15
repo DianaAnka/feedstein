@@ -2,9 +2,14 @@ import {
   ActivateEmailDTO,
   InserUserDTO,
   IUserSchema,
+  LoginUserDTO,
   RegisterUserDTO,
 } from '@feedstein/api-interfaces';
-import { getRandomString, hashString } from '@feedstein/utils';
+import {
+  compareHashingStrings,
+  getRandomString,
+  hashString,
+} from '@feedstein/utils';
 import UserRepository from '../repositories/user-repository';
 import * as moment from 'moment';
 import Events, { EventType } from '../events/pub-sub';
@@ -43,6 +48,16 @@ export class UserService {
 
   activateEmail(data: ActivateEmailDTO): Promise<boolean> {
     return UserRepository.activateUserByToken(data.token);
+  }
+
+  isAccounActivated(user: IUserSchema): boolean {
+    return user.active;
+  }
+
+  async getUser(data: LoginUserDTO): Promise<IUserSchema> {
+    const user = await UserRepository.findByEmail(data.email);
+    if (user && (await compareHashingStrings(data.password, user.password)))
+      return user;
   }
 }
 
