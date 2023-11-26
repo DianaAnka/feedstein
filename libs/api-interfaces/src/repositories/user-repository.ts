@@ -1,6 +1,5 @@
+import { InserUserDTO } from '../dto/auth-dtos';
 import { IUserSchema } from '../entities/user-schema';
-
-export type InserUserDTO = Omit<IUserSchema, '_id'>;
 
 export interface IUserRepository {
   insert: (data: InserUserDTO) => Promise<IUserSchema>;

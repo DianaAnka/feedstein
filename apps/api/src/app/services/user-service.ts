@@ -4,7 +4,6 @@ import {
   IUserSchema,
   LoginUserDTO,
   RegisterUserDTO,
-  ForgetPasswordDTO,
   ResetPasswordDTO,
 } from '@feedstein/api-interfaces';
 import {
@@ -62,8 +61,8 @@ export class UserService {
       return user;
   }
 
-  async getUserByEmail(data: ForgetPasswordDTO): Promise<IUserSchema> {
-    const user = await UserRepository.findByEmail(data.email);
+  async getUserByEmail(email: string): Promise<IUserSchema> {
+    const user = await UserRepository.findByEmail(email);
     return user;
   }
 
