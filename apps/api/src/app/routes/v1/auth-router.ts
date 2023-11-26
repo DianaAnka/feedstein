@@ -10,4 +10,8 @@ router.post('/activate', authController.activateEmail);
 
 router.post('/login', authController.login);
 
+router.post('/forget-password', authController.forgetPassword);
+
+router.post('/reset-password', authController.resetPassword);
+
 export default router;
