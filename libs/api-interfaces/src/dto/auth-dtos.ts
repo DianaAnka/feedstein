@@ -7,3 +7,12 @@ export type ActivateEmailDTO = {
 };
 
 export type LoginUserDTO = Pick<InserUserDTO, 'email' | 'password'>;
+
+export type ForgetPasswordDTO = {
+  email: string;
+};
+
+export type ResetPasswordDTO = {
+  password: string;
+  token: string;
+};

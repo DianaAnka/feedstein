@@ -19,6 +19,14 @@ const ACTIVATION_EMAIL_TEMPLATE_PATH = path.join(
   'activation.html'
 );
 
+const RESET_PASSWORD_TEMPLATE_PATH = path.join(
+  __dirname,
+  'assets',
+  'templates',
+  'html',
+  'reset.html'
+);
+
 class CEmailService {
   private transporter: nodemailer.Transporter;
 
@@ -42,6 +50,20 @@ class CEmailService {
     });
     await this.transporter.sendMail({
       subject: 'Activate your feedstein account',
+      from: SMTP_FROM,
+      to: user.email,
+      html,
+    });
+  }
+
+  async sendResetPasswordEmail(user: IUserSchema) {
+    const resetPasswordLink = `${FRONTEND_URL}/reset-password?token=${user.activationToken}`;
+    const html = await ejs.renderFile(RESET_PASSWORD_TEMPLATE_PATH, {
+      name: user.email,
+      resetPasswordLink,
+    });
+    await this.transporter.sendMail({
+      subject: 'Reset your feedstein account password',
       from: SMTP_FROM,
       to: user.email,
       html,

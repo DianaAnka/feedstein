@@ -2,10 +2,12 @@ import {
   ActivateEmailDTO,
   LoginUserDTO,
   RegisterUserDTO,
+  ForgetPasswordDTO,
+  ResetPasswordDTO,
 } from '@feedstein/api-interfaces';
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/user-service';
-import { activateEmailSchema, registerUserSchema } from '@feedstein/validation';
+import { activateEmailSchema, registerUserSchema, resetPasswordSchema } from '@feedstein/validation';
 import { createAccessToken, createRefreshToken } from '@feedstein/utils';
 import { JWT_TOKEN_EXPIRY, SECRET_KEY } from '../config';
 
@@ -103,7 +105,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
           message: 'User need to be activated',
         },
       });
-    return res.status(403).json({
+    return res.status(200).json({
       response: {
         user,
         token: createAccessToken(
@@ -114,6 +116,69 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         jwtTokenExpiry: JWT_TOKEN_EXPIRY,
       },
       cookie: createRefreshToken(loginUserDTO.email, SECRET_KEY),
+    });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function forgetPassword(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const forgetPasswordDTO: ForgetPasswordDTO = {
+    email: req.body.email,
+  };
+  try {
+    const user = await UserService.getUserByEmail(forgetPasswordDTO);
+    if (!user)
+      return res.status(400).json({
+        error: {
+          message: 'User does not exist',
+        },
+      });
+    await UserService.forgetPassword(user);
+    return res.status(200).json({
+      response: {
+        message: 'Reset password email has been sent',
+      },
+    });
+  } catch (e) {
+    next(e);
+  }
+}
+
+export async function resetPassword(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const resetPasswordDTO: ResetPasswordDTO = {
+    password: req.body.password,
+    token: req.body.token,
+  };
+  try {
+    await resetPasswordSchema.validate(resetPasswordDTO);
+  } catch {
+    return res.status(400).json({
+      error: {
+        message: 'Invalid data',
+      },
+    });
+  }
+  try {
+    const isActivated = await UserService.resetPassword(resetPasswordDTO);
+    if (!isActivated)
+      return res.status(400).json({
+        error: {
+          message: 'Error while password reset',
+        },
+      });
+    return res.status(200).json({
+      response: {
+        message: 'Password was reset',
+      },
     });
   } catch (e) {
     next(e);

@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 
 export enum EventType {
   REGISTER = 'REGISTER',
+  FORGETPASSWORD = 'FORGETPASSWORD',
 }
 
 export abstract class Event<T> {
