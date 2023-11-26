@@ -12,12 +12,13 @@ import { useFormik } from 'formik';
 import React from 'react';
 import { useLoginUser } from '../../api/auth-api';
 import { AuthLayout } from '../../layouts/auth-layout';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 
 export interface LoginPageProps {}
 
 export const LoginPage: React.FC<LoginPageProps> = () => {
-  const { mutateAsync: loginUser } = useLoginUser();
+  const { mutateAsync: loginUser,isSuccess,data:responseData } = useLoginUser();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -26,8 +27,15 @@ export const LoginPage: React.FC<LoginPageProps> = () => {
     },
     onSubmit: async (data, formikHelpers) => {
       try {
-        await loginUser(data);
+       const response = await loginUser(data);
+       console.log(response);
         formikHelpers.resetForm({});
+        if(isSuccess){
+          console.log("here"+"fff"+responseData);
+          
+          // localStorage.setItem('token',);
+        navigate('/login');
+        }
       } catch {
         alert('Error');
       }
@@ -37,7 +45,7 @@ export const LoginPage: React.FC<LoginPageProps> = () => {
     validateOnChange: false,
   });
   return (
-    <AuthLayout description="The Ultimate RSS feed aggregator">
+    <AuthLayout description="Expense Tracker">
       <Flex justify="center" align="center" height="100%">
         <VStack
           align="flex-start"

@@ -34,7 +34,7 @@ export const ForgetPasswordPage: React.FC<ForgetPasswordPageProps> = () => {
     validateOnChange: false,
   });
   return (
-    <AuthLayout description="The Ultimate RSS feed aggregator">
+    <AuthLayout description="Expense Tracker">
       <Flex justify="center" align="center" height="100%">
         <VStack
           align="flex-start"
