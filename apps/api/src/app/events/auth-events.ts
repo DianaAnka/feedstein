@@ -9,6 +9,12 @@ export class RegisterUserEvent extends Event<IUserSchema> {
   }
 }
 
+export class forgetPasswordEvent extends Event<IUserSchema> {
+  constructor(user: IUserSchema) {
+    super(EventType.FORGETPASSWORD, user);
+  }
+}
+
 async function handleSendActivationEmail(event: RegisterUserEvent) {
   try {
     await EmailService.sendActivationEmail(event.payload);
@@ -17,4 +23,14 @@ async function handleSendActivationEmail(event: RegisterUserEvent) {
   }
 }
 
+async function handleForgetPasswordEmail(event: forgetPasswordEvent) {
+  try {
+    await EmailService.sendResetPasswordEmail(event.payload);
+  } catch (e) {
+    logger.error(e);
+  }
+}
+
 Events.on(EventType.REGISTER, handleSendActivationEmail);
+
+Events.on(EventType.FORGETPASSWORD, handleForgetPasswordEmail);
