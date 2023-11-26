@@ -131,7 +131,7 @@ export async function forgetPassword(
     email: req.body.email,
   };
   try {
-    const user = await UserService.getUserByEmail(forgetPasswordDTO);
+    const user = await UserService.getUserByEmail(forgetPasswordDTO.email);
     if (!user)
       return res.status(400).json({
         error: {

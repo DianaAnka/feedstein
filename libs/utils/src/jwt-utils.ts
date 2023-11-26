@@ -13,3 +13,7 @@ export function createRefreshToken(email: string, secretKey: string) {
   const payload = { email };
   return jwt.sign(payload, secretKey, { expiresIn: '1d' });
 }
+
+export async function decodeAccessToken(token: string, secretKey: string) {
+  return await jwt.verify(token, secretKey);
+}

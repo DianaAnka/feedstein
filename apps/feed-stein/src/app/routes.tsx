@@ -5,6 +5,7 @@ import { HomePage } from './pages/home-page/home-page';
 import { RegisterPage } from './pages/register-page/register-page';
 import { LoginPage } from './pages/login-page/login-page';
 import { ForgetPasswordPage } from './pages/forget-password-page/forget-password-page';
+import { ExpenseListPage } from './pages/expense-list-page/expense-list-page';
 import { ResetPasswordPage } from './pages/reset-password-page copy/reset-password-page';
 
 export interface RoutesProps {}
@@ -19,6 +20,7 @@ export const Routes: React.FC<RoutesProps> = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forget-password" element={<ForgetPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/expense" element={<ExpenseListPage />} />
       </RouterRoute>
     </BrowserRouter>
   );
